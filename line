@@ -1,0 +1,44 @@
+from flask import Flask,jsonify,request
+app=Flask(__name__)
+
+@app.route("/callback")
+def callback():
+    return jsonify({'data' : request.url})
+
+if __name__=="__main__":
+        app.run()
+        
+client_id = 'KjbwfJb6WOf5kxSiiYTjO8'
+callback_url = 'http://127.0.0.1:5000/callback'
+URL = f'https://notify-bot.line.me/oauth/authorize?response_type=code&client_id={client_id}&redirect_uri={callback_url}&scope=notify&state=NO_STATE'
+print(URL)
+
+import requests
+
+code = 'XZsHimDDcUK91L6a7ac84R7qCZKh3SNd7N0ElpiVatP'
+client_secret = '3Peuw31Wc2SefoccsEC1GKjUc29ddwjjOYwDRN8xle4'
+headers = {
+    'Content-type': 'application/x-www-form-urlencoded'
+}
+
+payload = {
+ 'code':code,
+ 'client_id': client_id, 
+ 'client_secret': client_secret,
+ 'redirect_uri': callback_url,
+ 'grant_type' : 'authorization_code'   
+}
+
+res = requests.post('https://notify-bot.line.me/oauth/token', data = payload, headers = headers)
+
+token = 'RmId9D93wRmhJkHN3Ja2PfJepjAL3bPj75TWGu9aVQe'
+headers = {
+    'Content-type': 'application/x-www-form-urlencoded',
+    'Authorization': f'Bearer {token}'
+}
+
+payload = {
+ 'message':'Hello World', 
+}
+
+res = requests.post('https://notify-api.line.me/api/notify', data = payload, headers = headers)
